@@ -53,7 +53,8 @@ class local_hpclreport_form extends moodleform {
 			get_string('month','local_hpclreport'),$month);
 		$mform->addRule('month', get_string('required'), 'required', null, 'client'); 
 		$select->setMultiple(false);
-		$year = array('2018'=>2018,'2019'=>2019,'2020'=>2020);
+		//Rachita; added 2021 to the dropdown. 01/02/2021.
+		$year = array('2018'=>2018,'2019'=>2019,'2020'=>2020,'2021'=>2021);
 		$select = $mform->addElement('select', 'year',
 			get_string('syear','local_hpclreport'),$year);
 		$mform->addRule('month', get_string('required'), 'required', null, 'client'); 

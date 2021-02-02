@@ -48,7 +48,7 @@ function loginuser_details_hpcl($month,$year){
 		'month'=>$mn,
 		'sofarlogin'=>$a,
 		'uniquelogin'=>$b
-	);	
+		);	
 	return $resultvalue;
 }
 
@@ -89,31 +89,45 @@ function enrolled_category_hpcl_tech($techcatid,$month,$year) {
 	// get all subcategory 
 	global $DB;
 	$enrolcattech = 0;
+
 	$sql2 = "Select * from {course_categories} where path LIKE '%$techcatid%'";
+	
 	$get_subcat = $DB->get_records_sql($sql2);
+
+	//$get_subcat = $DB->get_records('course_categories', array('parent' => $techcatid));
+	
 	if (!empty($get_subcat)) {
 		foreach ($get_subcat as $key => $get_subcat_val){
 			$countcatid = $get_subcat_val->id;
+//echo $countcatid;
 			$countthis = enrolled_category_hpcl($countcatid,$month,$year);
+
 			$enrolcattech = $enrolcattech + $countthis ;//this should be technical
+
 		}
 	}
+
 	return $enrolcattech;
 }
 
 //completed total courses completed other
 
 function completed_category_hpcl($catid, $month ,$year) {
-	// get all courses where categoryid = $catid
+
+		// get all courses where categoryid = $catid
+
 	global  $DB,$USER,$CFG;
 	$courseids = $DB->get_records('course',array('category'=>$catid));
-	//here we get all course from particular id now we ill findenroleed users in above give month
+		// //here we get all course from particular id now we ill findenroleed users in above give month
 	$countcmpl = 0;
 	if($courseids){
 		foreach ($courseids as $key => $courseid) {
+
 			$getnumbercompletionq = "SELECT count(userid) as cmplnumber from {course_completions} 
 			where course = $courseid->id and MONTH(FROM_UNIXTIME(timecompleted)) = $month and YEAR(FROM_UNIXTIME(timecompleted)) = $year ";
 			$result = $DB->get_record_sql($getnumbercompletionq);
+			
+			
 			if (!empty($result)) {
 				$countcmpl = $countcmpl + $result->cmplnumber;	
 			}
@@ -125,19 +139,30 @@ function completed_category_hpcl($catid, $month ,$year) {
 //other Technical
 
 function completed_category_hpcl_tech($catid, $month ,$year) {
+
 // get all subcategory 
 	global $DB;
 	$enrolcattech = 0;
+
 	$sql2 = "Select * from {course_categories} where path LIKE '%$techcatid%'";
+	
 	$get_subcat = $DB->get_records_sql($sql2);
+
+	//$get_subcat = $DB->get_records('course_categories', array('parent' => $techcatid));
+	
 	if (!empty($get_subcat)) {
 		foreach ($get_subcat as $key => $get_subcat_val){
 			$countcatid = $get_subcat_val->id;
+//echo $countcatid;
 			$countthis = completed_category_hpcl($countcatid,$month,$year);
+
 			$enrolcattech = $enrolcattech + $countthis ;//this should be technical
+
 		}
 	}
+
 	return $enrolcattech;
+	
 }
 
 //total certificate earned 
@@ -235,20 +260,18 @@ function badges_category_hpcl ($catid = NULL,$month,$allcat,$year){
 				'silver'=>$totalcountsilver,
 				'gold'=>$totalcountgold,
 				'cmpl'=>$totalcountcompleion
-			);
+				);
 		}
 	}
 	return $medal;
 }
 
 function enrolled_category_courserank_hpcl($catid, $month,$rank,$year) {
-
-		// get all courses where categoryid = $catid
-
+	// get all courses where categoryid = $catid
 	global  $DB,$USER,$CFG;
 	$courseids = $DB->get_records('course',array('category'=>$catid));
-		// //here we get all course from particular id now we ill findenroleed users in above give month
-	$totalrank = '';
+	//here we get all course from particular id now we ill findenroleed users in above give month
+	$totalrank = [];
 	$countenr = 0;
 	if($courseids){
 		foreach ($courseids as $key => $courseid) {
@@ -260,19 +283,14 @@ function enrolled_category_courserank_hpcl($catid, $month,$rank,$year) {
 			if (!empty($result)) {
 				$countenr = $result->enroled;	
 				$totalrank[$countenr] = array(
-					'enroled'=>$courseid->id
+				'enroled'=>$courseid->id
 				);
 			}
-			
-			
-
 		}
 	}
 	$returnrank = '';
-
 	if($totalrank){
 		krsort($totalrank);
-		
 		foreach ($totalrank as $key => $value) {
 			$noenr = $key ;
 			$courseid = $value['enroled'];
@@ -290,11 +308,12 @@ function enrolled_category_courserank_hpcl($catid, $month,$rank,$year) {
 }
 
 //time spent code here added by prashant oct-25-2018 
+
 function timespent_hpcl($month,$year){
 	global $DB,$CFG;
 	//login user details
-	$logoutarray = '';
-	$loginarray = '';
+	$logoutarray = [];
+	$loginarray = [];
 	$sql = "SELECT id,userid, 
 	timecreated,DAY(FROM_UNIXTIME(timecreated)) AS day1
 	FROM `mdl_logstore_standard_log` 
@@ -309,7 +328,7 @@ function timespent_hpcl($month,$year){
 					$value->userid,
 					$value->timecreated,
 					$value->day1
-				);
+					);
 			}
 		}
 	}
@@ -327,7 +346,7 @@ function timespent_hpcl($month,$year){
 					$value->userid,
 					$value->timecreated,
 					$value->day2			
-				);
+					);
 			}
 		}
 	}
