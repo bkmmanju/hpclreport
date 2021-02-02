@@ -1,0 +1,10 @@
+.card-body {
+    padding: 20px;
+}
+h5,p{
+text-align: center;
+}
+p {
+    font-weight: 700;
+        font-size: 20px;
+}
